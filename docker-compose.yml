@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      PORT: ${PORT:-8787}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:?GEMINI_API_KEY is required}
+      STORE_ENABLED_PROVIDERS: ${STORE_ENABLED_PROVIDERS:-picnic}
+      PICNIC_INTEGRATION_MODE: ${PICNIC_INTEGRATION_MODE:-simulated}
+      PICNIC_API_BASE_URL: ${PICNIC_API_BASE_URL:-https://storefront-prod.nl.picnicinternational.com/api/17}
+      PICNIC_LOGIN_PATH: ${PICNIC_LOGIN_PATH:-/auth/login}
+      PICNIC_SEARCH_PATH: ${PICNIC_SEARCH_PATH:-/search}
+      PICNIC_ADD_TO_CART_PATH: ${PICNIC_ADD_TO_CART_PATH:-/cart/add_product}
+      PICNIC_TIMEOUT_MS: ${PICNIC_TIMEOUT_MS:-15000}
+      PICNIC_AUTH_TOKEN: ${PICNIC_AUTH_TOKEN:-}
+      PICNIC_SESSION_COOKIE: ${PICNIC_SESSION_COOKIE:-}
+      PICNIC_USER_ID: ${PICNIC_USER_ID:-}
+      PICNIC_API_KEY: ${PICNIC_API_KEY:-}
+      PICNIC_EMAIL: ${PICNIC_EMAIL:-}
+      PICNIC_PASSWORD: ${PICNIC_PASSWORD:-}
+    ports:
+      - "8787:8787"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
